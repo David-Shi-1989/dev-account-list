@@ -59,6 +59,10 @@ export const AccountType = {
   free_trial: 6
 }
 
+export function getAccountTypeNameByKey (key) {
+  return formatKey(Object.keys(AccountType).find(type => key === AccountType[type])) || ''
+}
+
 export class Account {
   constructor (consObj) {
     let obj = consObj || {}

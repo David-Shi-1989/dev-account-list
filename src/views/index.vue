@@ -73,10 +73,10 @@
 </template>
 
 <script>
-import {ClusterList, PlanList, AccountType, getClusterNameByKey, copyTo, downloadFile} from '@/constant.js';
+import {ClusterList, PlanList, AccountType, getAccountTypeNameByKey, getClusterNameByKey, copyTo, downloadFile} from '@/constant.js';
 import {getAccountByPage, removeAccounts, getAccountData} from '@/data/index.js';
 import { createVNode } from 'vue';
-import { Button, Space } from '@arco-design/web-vue';
+import { Button, Space, Tag } from '@arco-design/web-vue';
 import passwordCopy from '@/components/password-copy';
 import createEditModal from './createEditModal.vue';
 import detailModal from './detailModal.vue';
@@ -133,6 +133,22 @@ export default {
                 value: email,
                 textWidth: 300
               })
+            }
+          },
+          {
+            title: 'Account Type',
+            render: ({record}) => {
+              const {accountType} = record
+              let tagArr = accountType.map(tag => {
+                return createVNode(Tag, {
+                  size: "mini",
+                  color: "blue",
+                  style: {
+                    marginRight: '6px'
+                  }
+                }, {default: () => getAccountTypeNameByKey(tag)})
+              })
+              return createVNode('div', {}, tagArr)
             }
           },
           {
@@ -218,7 +234,7 @@ export default {
       if (this.query.plans && this.query.plans.length > 0) {
         queryObj.plans = this.query.plans
       }
-      if (this.query.accountType) {
+      if (this.query.accountType && this.query.accountType.length > 0) {
         queryObj.accountType = this.query.accountType
       }
       if (this.query.keyword) {
