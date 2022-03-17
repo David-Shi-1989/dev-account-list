@@ -1,5 +1,6 @@
 const masterClusterList = {
-  'dev-int': 0
+  'dev-int': 0,
+  'local': 5,
 }
 const releaseClusterList = {
   'dev': 1,
@@ -14,23 +15,48 @@ export function getClusterNameByKey (key) {
 }
 
 export const PlanList = {
-  'Meeting': 0,
-  'Zoom Phone': 1,
-  'Zoom Room': 2,
-  'Webinar': 3,
-  'Zoom Events': 4,
-  'Zoom United': 5,
-  'Large Meeting': 6,
-  'Cloud Recording': 7,
-  'Audio': 8
+  'meeting': 0,
+  'zoom_phone': 1,
+  'zoom_room': 2,
+  'webinar': 3,
+  'zoom_events': 4,
+  'zoom_united': 5,
+  'large_meeting': 6,
+  'cloud_recording': 7,
+  'audio': 8,
+  'conference_room_connector': 9,
+  'hardware': 10,
+  'video_sdk': 11,
+  'free_trial': 12,
 }
 
 export function getPlanNameByKey (val) {
-  return Object.keys(PlanList).find(planName => val === PlanList[planName]) || ''
+  return formatKey(Object.keys(PlanList).find(planName => val === PlanList[planName])) || ''
 }
 
 export const requiredRule = (fieldName) => {
   return {required: true, message: `${fieldName} is required`}
+}
+
+export function formatKey (val) {
+  function formatWord (word) {
+    if (['cc', 'sdk'].includes(word.toLowerCase())) {
+      return word.toUpperCase()
+    }
+    let firstLetter = word.substr(0, 1).toUpperCase(), otherLetter = word.substr(1).toLowerCase()
+    return firstLetter + otherLetter
+  }
+  let arr = val.split(/\s|_/)
+  return arr.map(s => formatWord(s)).join(' ')
+}
+
+export const AccountType = {
+  paid: 1,
+  free_with_cc: 2,
+  free_without_cc: 3,
+  master_account: 4,
+  sub_account: 5,
+  free_trial: 6
 }
 
 export class Account {
@@ -46,17 +72,35 @@ export class Account {
     this.plans = obj.plans || []
     if (this.plans.length > 0) {
       this.planNames = this.plans.map(planCode => getPlanNameByKey(planCode))
+      this.hasFreeTrial = this.plans.includes(plan => plan === PlanList.free_trial)
     }
     this.isFreeAccount = obj.isFreeAccount || false
-    this.isWithoutCC = obj.isWithoutCC || false
+    this.freeWithCC = obj.freeWithCC || false
     this.description = obj.description || ''
     // master account
     this.isMasterAccount = obj.isMasterAccount || false
     this.hasSubAccount = obj.hasSubAccount || false
     this.isSubAccount = obj.isSubAccount || false
+
+    this.initAccountType()
   }
   isValidCluster (val) {
     return (typeof val === 'number' && getClusterNameByKey(val))
+  }
+  initAccountType () {
+    this.accountType = []
+    if (this.plans.length > 0 && !this.hasFreeTrial) {
+      this.accountType.push(AccountType.paid)
+    } else if (this.plans.length > 0 && this.hasFreeTrial) {
+      this.accountType.push(AccountType.free_trial)
+    } else if (this.plans.length === 0 || this.isFreeAccount) {
+      this.accountType.push(this.freeWithCC ? AccountType.free_with_cc : AccountType.free_without_cc)
+    }
+    if (this.isMasterAccount) {
+      this.accountType.push(AccountType.master_account)
+    } else if (this.isSubAccount) {
+      this.accountType.push(AccountType.sub_account)
+    }
   }
 }
 

@@ -2,11 +2,14 @@
   <!-- Query Bar -->
   <div id="query_wrap">
     <a-space style="width:100%;margin-bottom:20px;" value="large">
-      <a-select v-model="query.cluster" style="width:220px;" size="small" placeholder="Cluster" multiple>
+      <a-select v-model="query.cluster" style="width:220px;" size="small" placeholder="Cluster" multiple allow-clear>
         <a-option v-for="(val, key) in ClusterList" :key="val" :value="val">{{ key }}</a-option>
       </a-select>
-      <a-select v-model="query.plans" style="width:350px;" size="small" placeholder="Plans" multiple :max-tag-count="3">
-        <a-option v-for="(val, key) in PlanList" :key="val" :value="val">{{ key }}</a-option>
+      <a-select v-model="query.plans" style="width:350px;" size="small" placeholder="Plans" multiple :max-tag-count="3" allow-clear>
+        <a-option v-for="(val, key) in PlanList" :key="val" :value="val">{{ capitalFilter(key) }}</a-option>
+      </a-select>
+      <a-select v-model="query.accountType" style="width:180px;" size="small" placeholder="Account Type" multiple allow-clear>
+        <a-option v-for="(val, key) in AccountType" :key="val" :value="val">{{ capitalFilter(key) }}</a-option>
       </a-select>
       <a-input v-model="query.keyword" style="width: 220px;" size="small" placeholder="Search keywords" allow-clear>
         <template #suffix>
@@ -70,7 +73,7 @@
 </template>
 
 <script>
-import {ClusterList, PlanList, getClusterNameByKey, copyTo, downloadFile} from '@/constant.js';
+import {ClusterList, PlanList, AccountType, getClusterNameByKey, copyTo, downloadFile} from '@/constant.js';
 import {getAccountByPage, removeAccounts, getAccountData} from '@/data/index.js';
 import { createVNode } from 'vue';
 import { Button, Space } from '@arco-design/web-vue';
@@ -87,6 +90,7 @@ export default {
       query: {
         cluster: [],
         plans: [],
+        accountType: null,
         keyword: ''
       },
       table: {
@@ -196,7 +200,8 @@ export default {
         id: ''
       },
       ClusterList,
-      PlanList
+      PlanList,
+      AccountType
     }
   },
   created () {
@@ -212,6 +217,9 @@ export default {
       }
       if (this.query.plans && this.query.plans.length > 0) {
         queryObj.plans = this.query.plans
+      }
+      if (this.query.accountType) {
+        queryObj.accountType = this.query.accountType
       }
       if (this.query.keyword) {
         queryObj.keyword = this.query.keyword
@@ -278,6 +286,7 @@ export default {
       Object.assign(this.query, {
         cluster: [],
         plans: [],
+        accountType: null,
         keyword: ''
       })
     },
@@ -295,13 +304,14 @@ export default {
         datetime: Date.now()
       }
       downloadFile(fileName, JSON.stringify(backupObj))
-    }
+    },
   },
   computed: {
     queryCondition () {
       return {
         cluster: this.query.cluster,
         plans: this.query.plans,
+        accountType: this.query.accountType,
         keyword: this.query.keyword
       }
     }
@@ -313,7 +323,7 @@ export default {
         this.doQuery()
       }
     }
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

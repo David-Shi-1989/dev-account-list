@@ -31,7 +31,7 @@
     <ul>
       <li class="full-row">
         <p>Subscription(s)</p>
-        <p>
+        <p class="sub-list">
           <a-tag v-for="s in account.planNames" :key="s" color="blue">{{s}}</a-tag>
         </p>
       </li>
@@ -134,6 +134,14 @@ $gray-text-color: rgb(169, 171, 173);
             font-size: 16px;
           }
         }
+      }
+    }
+  }
+  .sub-list {
+    & > span {
+      margin-bottom: 8px;
+      &:not(:last-child) {
+        margin-right: 12px;
       }
     }
   }

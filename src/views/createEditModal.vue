@@ -24,8 +24,8 @@
         <a-form-item label="Is Free Account">
           <a-checkbox v-model="form.isFreeAccount"></a-checkbox>
         </a-form-item>
-        <a-form-item v-if="form.isFreeAccount" label="Without CC">
-          <a-checkbox v-model="form.isWithoutCC"></a-checkbox>
+        <a-form-item v-if="form.isFreeAccount" label="Has Credit Card">
+          <a-switch type="round" size="small" v-model="form.freeWithCC"/>
         </a-form-item>
         <div class="more-config-switch">
           <a-button type="text" @click="showMoreConfig=!showMoreConfig">
@@ -47,10 +47,9 @@
           <a-divider orientation="center">Plan</a-divider>
           <a-form-item label="Plan Config">
             <a-checkbox-group class="plan-checkbox" v-model="form.plans">
-              <a-checkbox v-for="(val, key) in PlanList" :key="val" :value="val">{{key}}</a-checkbox>
+              <a-checkbox v-for="(val, key) in PlanList" :key="val" :value="val">{{capitalFilter(key)}}</a-checkbox>
             </a-checkbox-group>
           </a-form-item>
-
           <a-divider orientation="center">Master/Sub Account</a-divider>
           <a-form-item label="Is Master Account">
             <a-checkbox v-model="form.isMasterAccount"></a-checkbox>
@@ -67,7 +66,7 @@
 <script>
 import {ClusterList, PlanList, requiredRule, Account} from '@/constant.js';
 import {addAccount, generateID, getAccountById, editAccount} from '@/data/index.js';
-
+import { reactive } from 'vue'
 export default {
   props: {
     visible: {
@@ -118,7 +117,10 @@ export default {
     },
     onModalClose () {
       this.$refs.createForm.resetFields()
-      this.form.plans = []
+      let initialForm = new Account()
+      for (let field in initialForm) {
+        this.form[field] = initialForm[field]
+      }
       this.showMoreConfig = false
     },
     onModalBeforeOpen () {

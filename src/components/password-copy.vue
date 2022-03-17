@@ -1,7 +1,7 @@
 <template>
   <div class="psw-copy">
     <p :style="{maxWidth:textWidth+'px'}">{{value}}</p>
-    <a-button type="text" size="mini" @click="onCopyBtn" title="copy password">
+    <a-button type="text" size="mini" @click="onCopyBtn" title="copy">
       <template #icon>
         <icon-copy />
       </template>
