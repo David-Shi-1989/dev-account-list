@@ -1,6 +1,9 @@
 import {isArray} from 'lodash'
-const LocalStorageKey_Account_List = '_account_list_'
 import {Account} from '@/constant.js'
+import {get} from 'lodash'
+
+const LocalStorageKey_Account_List = '_account_list_'
+const LocalStorageKey_Config_Obj = '_account_config_'
 
 export function getAccountById (id) {
   return Promise.resolve(getAccountData().find(r => r.id === id) || null)
@@ -88,4 +91,36 @@ export function removeAccounts (idList) {
 
 export function generateID () {
   return Date.now()
+}
+
+// config
+export function getConfig () {
+  try {
+    let obj = JSON.parse(localStorage.getItem(LocalStorageKey_Config_Obj))
+    if (obj && typeof obj === 'object') {
+      return obj
+    } else {
+      return {}
+    }
+  } catch (err) {
+    return {}
+  }
+}
+export function setConfig (obj) {
+  localStorage.setItem(LocalStorageKey_Config_Obj, JSON.stringify(obj))
+  return true
+}
+export function getQuery () {
+  return get(getConfig(), 'query', {})
+}
+export function saveQuery (queryObj) {
+  let config = getConfig()
+  config.query = queryObj
+  return setConfig(config)
+}
+
+export function cleanQuery () {
+  let config = getConfig()
+  delete config.query
+  return setConfig(config)
 }

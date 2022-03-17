@@ -74,7 +74,7 @@
 
 <script>
 import {ClusterList, PlanList, AccountType, getAccountTypeNameByKey, getClusterNameByKey, copyTo, downloadFile} from '@/constant.js';
-import {getAccountByPage, removeAccounts, getAccountData} from '@/data/index.js';
+import {getAccountByPage, removeAccounts, getAccountData, getQuery, saveQuery, cleanQuery} from '@/data/index.js';
 import { createVNode } from 'vue';
 import { Button, Space, Tag } from '@arco-design/web-vue';
 import passwordCopy from '@/components/password-copy';
@@ -86,13 +86,17 @@ export default {
   name: 'tableList',
   components: {createEditModal, detailModal},
   data () {
-    return {
-      query: {
+    let query = Object.assign({},
+      {
         cluster: [],
         plans: [],
         accountType: null,
         keyword: ''
       },
+      getQuery()
+    )
+    return {
+      query,
       table: {
         rowSelection: {type: 'checkbox'},
         loading: false,
@@ -240,6 +244,9 @@ export default {
       if (this.query.keyword) {
         queryObj.keyword = this.query.keyword
       }
+      if (Object.keys(queryObj).length > 0) {
+        saveQuery(queryObj)
+      }
       getAccountByPage(this.table.pagination.page, this.table.pagination.pageSize, queryObj).then(res => {
         this.table.data = res.list
         this.table.pagination.total = res.total
@@ -305,6 +312,7 @@ export default {
         accountType: null,
         keyword: ''
       })
+      cleanQuery()
     },
     // tools
     onToolDropdownSelect (option) {
