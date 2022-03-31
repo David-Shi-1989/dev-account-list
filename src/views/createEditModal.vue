@@ -66,7 +66,6 @@
 <script>
 import {ClusterList, PlanList, requiredRule, Account} from '@/constant.js';
 import {addAccount, generateID, getAccountById, editAccount} from '@/data/index.js';
-import { reactive } from 'vue'
 export default {
   props: {
     visible: {

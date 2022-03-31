@@ -119,12 +119,11 @@ export function copyTo (text) {
 
 export function downloadFile (fileName, content) {
   var aLink = document.createElement("a")
-  var blob = new Blob([content])
-  var evt = document.createEvent("HTMLEvents")
-  evt.initEvent("click", false, false)
-  aLink.download = fileName
-  aLink.href = URL.createObjectURL(blob)
-  aLink.dispatchEvent(evt)
+  aLink.href = `data:text/plain;charset=utf-8,${content}`;
+  aLink.download = fileName;
+  document.body.append(aLink)
+  aLink.click()
+  document.body.removeChild(aLink)
 }
 
 /* eslint-disable */

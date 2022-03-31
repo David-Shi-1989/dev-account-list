@@ -124,3 +124,31 @@ export function cleanQuery () {
   delete config.query
   return setConfig(config)
 }
+
+export function importData (data) {
+  let list = getAccountData()
+  let result = {
+    result: false
+  }
+  if (data.datetime && isArray(data.data)) {
+    Object.assign(result, {
+      successRecordCount: 0,
+      conflictRecordCount: 0
+    })
+    data.data.forEach(newAppendItem => {
+      // check if conflict
+      if (list.some(item => item.cluster === newAppendItem.cluster && item.email === newAppendItem.email)) {
+        result.conflictRecordCount++
+      } else {
+        result.successRecordCount++
+        list.push(newAppendItem)
+      }
+    })
+    saveAccountData(list)
+    result.result = true
+    return result
+  } else {
+    result.errorMsg = 'Incompatible data formats.'
+    return result
+  }
+}

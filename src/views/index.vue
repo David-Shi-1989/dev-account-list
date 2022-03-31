@@ -70,6 +70,7 @@
   <!-- Modal -->
   <createEditModal v-model:visible="createEditModal.isShow" :id="createEditModal.id" @init-data="initData"></createEditModal>
   <detailModal v-model:visible="detailModal.isShow" v-model:id="detailModal.id"></detailModal>
+  <importModal v-model:visible="importModal.isShow" @data-change="initData"></importModal>
 </template>
 
 <script>
@@ -80,11 +81,12 @@ import { Button, Space, Tag } from '@arco-design/web-vue';
 import passwordCopy from '@/components/password-copy';
 import createEditModal from './createEditModal.vue';
 import detailModal from './detailModal.vue';
+import importModal from './importModal.vue';
 import {debounce} from 'lodash';
 
 export default {
   name: 'tableList',
-  components: {createEditModal, detailModal},
+  components: {createEditModal, detailModal, importModal},
   data () {
     let query = Object.assign({},
       {
@@ -219,6 +221,9 @@ export default {
         isShow: false,
         id: ''
       },
+      importModal: {
+        isShow: false,
+      },
       ClusterList,
       PlanList,
       AccountType
@@ -316,19 +321,26 @@ export default {
     },
     // tools
     onToolDropdownSelect (option) {
-      console.log(option)
       if (option === "backup") {
         this.doBackup()
+      } else if (option === "import") {
+        this.doImport()
       }
     },
     doBackup () {
-      let fileName = (new Date()).format('account-backup-yyyy/MM/dd hh:mm:ss')
+      let fileName = (new Date()).format('account-backup-yyyy/MM/dd hh:mm:ss.json')
       let backupObj = {
-        data: getAccountData(),
+        data: getAccountData().map(item => {
+          delete item.planNames
+          return item
+        }),
         datetime: Date.now()
       }
       downloadFile(fileName, JSON.stringify(backupObj))
     },
+    doImport () {
+      this.importModal.isShow = true
+    }
   },
   computed: {
     queryCondition () {

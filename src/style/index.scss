@@ -8,7 +8,6 @@
 
 #nav {
   padding: 30px;
-
   a {
     font-weight: bold;
     color: #2c3e50;
@@ -16,6 +15,19 @@
     &.router-link-exact-active {
       color: #42b983;
     }
+  }
+}
+
+.d-flex {
+  display: flex;
+  &.flex-column {
+    flex-direction: column;
+  }
+  &.align-center {
+    align-items: center;
+  }
+  &.just-center {
+    justify-content: center;
   }
 }
 
