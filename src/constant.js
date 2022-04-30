@@ -1,3 +1,5 @@
+import { sortBy } from 'lodash'
+
 const masterClusterList = {
   'dev-int': 0,
   'local': 5,
@@ -7,7 +9,7 @@ const releaseClusterList = {
   'deva': 2,
   'devb': 3,
   'go': 4,
-  'ep': 5,
+  'ep': 6,
 }
 export const ClusterList = Object.assign({}, masterClusterList, releaseClusterList)
 
@@ -15,7 +17,7 @@ export function getClusterNameByKey (key) {
   return Object.keys(ClusterList).find(cluster => key === ClusterList[cluster]) || ''
 }
 
-export const PlanList = {
+const _planList = {
   'meeting': 0,
   'zoom_phone': 1,
   'zoom_room': 2,
@@ -32,6 +34,9 @@ export const PlanList = {
   'whiteboard': 13,
   'zoom_one': 14,
 }
+export const PlanList = Object.keys(_planList)
+  .map(key => ({key, value: _planList[key]}))
+  .sort((item1, item2) => item1.key >= item2.key ? 1 : -1)
 
 export function getPlanNameByKey (val) {
   return formatKey(Object.keys(PlanList).find(planName => val === PlanList[planName])) || ''

@@ -6,7 +6,7 @@
         <a-option v-for="(val, key) in ClusterList" :key="val" :value="val">{{ key }}</a-option>
       </a-select>
       <a-select v-model="query.plans" style="width:350px;" size="small" placeholder="Plans" multiple :max-tag-count="3" allow-clear>
-        <a-option v-for="(val, key) in PlanList" :key="val" :value="val">{{ capitalFilter(key) }}</a-option>
+        <a-option v-for="({key, value}) in PlanList" :key="value" :value="value">{{ capitalFilter(key) }}</a-option>
       </a-select>
       <a-select v-model="query.accountType" style="width:180px;" size="small" placeholder="Account Type" multiple allow-clear>
         <a-option v-for="(val, key) in AccountType" :key="val" :value="val">{{ capitalFilter(key) }}</a-option>

@@ -47,7 +47,7 @@
           <a-divider orientation="center">Plan</a-divider>
           <a-form-item label="Plan Config">
             <a-checkbox-group class="plan-checkbox" v-model="form.plans">
-              <a-checkbox v-for="(val, key) in PlanList" :key="val" :value="val">{{capitalFilter(key)}}</a-checkbox>
+              <a-checkbox v-for="({key, value}) in PlanList" :key="value" :value="value">{{capitalFilter(key)}}</a-checkbox>
             </a-checkbox-group>
           </a-form-item>
           <a-divider orientation="center">Master/Sub Account</a-divider>
