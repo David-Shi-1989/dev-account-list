@@ -6,7 +6,8 @@ const releaseClusterList = {
   'dev': 1,
   'deva': 2,
   'devb': 3,
-  'go': 4
+  'go': 4,
+  'ep': 5,
 }
 export const ClusterList = Object.assign({}, masterClusterList, releaseClusterList)
 
@@ -28,6 +29,8 @@ export const PlanList = {
   'hardware': 10,
   'video_sdk': 11,
   'free_trial': 12,
+  'whiteboard': 13,
+  'zoom_one': 14,
 }
 
 export function getPlanNameByKey (val) {
