@@ -39,7 +39,7 @@ export const PlanList = Object.keys(_planList)
   .sort((item1, item2) => item1.key >= item2.key ? 1 : -1)
 
 export function getPlanNameByKey (val) {
-  return formatKey(Object.keys(PlanList).find(planName => val === PlanList[planName])) || ''
+  return formatKey(Object.keys(_planList).find(planName => val === _planList[planName])) || ''
 }
 
 export const requiredRule = (fieldName) => {
@@ -84,7 +84,7 @@ export class Account {
     this.plans = obj.plans || []
     if (this.plans.length > 0) {
       this.planNames = this.plans.map(planCode => getPlanNameByKey(planCode))
-      this.hasFreeTrial = this.plans.includes(plan => plan === PlanList.free_trial)
+      this.hasFreeTrial = this.plans.includes(plan => plan === _planList.free_trial)
     }
     this.isFreeAccount = obj.isFreeAccount || false
     this.freeWithCC = obj.freeWithCC || false
