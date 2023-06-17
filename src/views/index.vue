@@ -123,6 +123,7 @@ export default {
           {
             title: 'Email',
             dataIndex: 'email',
+            width: 300,
             render: ({record}) => {
               const {email} = record
               return createVNode(passwordCopy, {
@@ -141,6 +142,10 @@ export default {
                 value: password
               })
             }
+          },
+          {
+            title: 'Description',
+            dataIndex: 'description'
           },
           {
             title: 'Action',

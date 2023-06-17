@@ -42,7 +42,7 @@ export class Account {
     if (this.cluster >= 0) {
       this.clusterName = getClusterNameByKey(this.cluster)
     }
-    this.password = obj.password || ''
+    this.password = obj.password || 'Pass123!'
     this.plans = obj.plans || []
     if (this.plans.length > 0) {
       this.planNames = this.plans.map(planCode => getPlanNameByKey(planCode))
