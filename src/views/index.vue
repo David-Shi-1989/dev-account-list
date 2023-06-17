@@ -133,6 +133,7 @@ export default {
           {
             title: 'Email',
             dataIndex: 'email',
+            width: 300,
             render: ({record}) => {
               const {email} = record
               return createVNode(passwordCopy, {
@@ -143,6 +144,7 @@ export default {
           },
           {
             title: 'Account Type',
+            width: 200,
             render: ({record}) => {
               const {accountType} = record
               let tagArr = accountType.map(tag => {
@@ -167,6 +169,10 @@ export default {
                 value: password
               })
             }
+          },
+          {
+            title: 'Description',
+            dataIndex: 'description'
           },
           {
             title: 'Action',
